@@ -73,7 +73,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-10 font-sans bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${bgImage})` }}">
+    <div className="min-h-screen flex flex-col items-center px-4 py-10 font-sans bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${bgImage})` }}>
 
       {/* ── Header ── */}
       <header className="text-center mb-8 max-w-lg w-full">
