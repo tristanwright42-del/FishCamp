@@ -9,7 +9,7 @@ const BACK_SHIRT_IMAGE_URL = "https://placehold.co/600x600/1e3a5f/ffffff?text=Sh
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const SHIRT_SIZES = ["S", "M", "L", "XL", "2XL", "3XL"];
-const EMPTY_FORM = { full_name: "", shirt_size: "", notes: "" };
+const EMPTY_FORM = { full_name: "", shirt_size: "", tag_number: "", notes: "" };
 
 export default function App() {
   const [form, setForm] = useState(EMPTY_FORM);
@@ -17,6 +17,7 @@ export default function App() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [exporting, setExporting] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -34,7 +35,12 @@ export default function App() {
     setSubmitting(true);
     try {
       const { error: sbError } = await supabase.from("shirt_orders").insert([
-        { full_name: form.full_name.trim(), shirt_size: form.shirt_size, notes: form.notes.trim() || null },
+        {
+          full_name: form.full_name.trim(),
+          shirt_size: form.shirt_size,
+          tag_number: form.tag_number.trim() || null,
+          notes: form.notes.trim() || null,
+        },
       ]);
       if (sbError) throw sbError;
       setSuccess(true);
@@ -47,6 +53,41 @@ export default function App() {
     }
   }
 
+  async function handleExport() {
+    setExporting(true);
+    try {
+      const { data, error: sbError } = await supabase
+        .from("shirt_orders")
+        .select("*")
+        .order("created_at", { ascending: true });
+      if (sbError) throw sbError;
+      if (!data || data.length === 0) { alert("No submissions yet."); return; }
+      const headers = ["ID", "Full Name", "Shirt Size", "Tag Number", "Notes", "Submitted At"];
+      const rows = data.map((r) => [
+        r.id,
+        r.full_name,
+        r.shirt_size,
+        r.tag_number || "",
+        r.notes || "",
+        r.created_at,
+      ]);
+      const csv = [headers, ...rows]
+        .map((row) => row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","))
+        .join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "fishcamp_orders.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert("Export failed: " + err.message);
+    } finally {
+      setExporting(false);
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-10 font-sans bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${bgImage})` }}>
       <header className="text-center mb-8 max-w-lg w-full">
@@ -55,6 +96,7 @@ export default function App() {
           <p className="mt-2 text-sm text-stone-200">Submit your name and shirt size so we can design your shirt!</p>
         </div>
       </header>
+
       <main className="w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden" style={{ backgroundColor: "rgba(15,40,25,0.82)", backdropFilter: "blur(8px)" }}>
         <section className="p-5 border-b border-stone-600">
           <h2 className="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-3">This Year's Design</h2>
@@ -80,6 +122,7 @@ export default function App() {
             </div>
           </div>
         </section>
+
         <section className="p-5">
           <h2 className="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-4">Submit Your Order</h2>
           {success && (<div role="alert" className="mb-4 rounded-xl bg-teal-900/70 border border-teal-600 px-4 py-3 text-teal-200"><p className="text-sm font-medium">Size submitted! See you at Fish Camp!</p></div>)}
@@ -101,6 +144,12 @@ export default function App() {
               </select>
             </div>
             <div className="flex flex-col gap-1">
+              <label htmlFor="tag_number" className="text-sm font-semibold text-stone-200">Tag Number <span className="text-stone-500 font-normal">(if applicable)</span></label>
+              <input id="tag_number" name="tag_number" type="text" placeholder="e.g. 42" value={form.tag_number} onChange={handleChange} disabled={submitting}
+                className="h-12 rounded-xl border border-stone-600 px-4 text-base text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-50 transition"
+                style={{ backgroundColor: "rgba(15,40,25,0.7)" }} />
+            </div>
+            <div className="flex flex-col gap-1">
               <label htmlFor="notes" className="text-sm font-semibold text-stone-200">Special Notes <span className="text-stone-500 font-normal">(optional)</span></label>
               <textarea id="notes" name="notes" rows={3} placeholder="e.g. Prefer a fitted cut..." value={form.notes} onChange={handleChange} disabled={submitting}
                 className="rounded-xl border border-stone-600 px-4 py-3 text-base text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-50 transition resize-none min-h-[80px]"
@@ -113,7 +162,15 @@ export default function App() {
           </form>
         </section>
       </main>
-      <footer className="mt-8 text-center text-xs text-stone-300 drop-shadow">Fish Camp 2026 · Alaska</footer>
+
+      <footer className="mt-8 w-full max-w-lg flex items-center justify-between">
+        <span className="text-xs text-stone-300 drop-shadow">Fish Camp 2026 · Alaska</span>
+        <button onClick={handleExport} disabled={exporting}
+          className="text-xs font-semibold px-4 py-2 rounded-xl border border-stone-500 text-stone-200 hover:bg-black/40 disabled:opacity-50 transition-colors backdrop-blur-sm"
+          style={{ backgroundColor: "rgba(15,40,25,0.6)" }}>
+          {exporting ? "Exporting..." : "Export CSV"}
+        </button>
+      </footer>
     </div>
   );
 }
