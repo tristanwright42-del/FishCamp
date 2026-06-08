@@ -1,4 +1,5 @@
 import { useState } from "react";
+import bgImage from "./pexels-tomas-malik-793526-27244690.jpg";
 import { createClient } from "@supabase/supabase-js";
 
 // ============================================================
@@ -72,7 +73,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center px-4 py-10 font-sans">
+    <div className="min-h-screen flex flex-col items-center px-4 py-10 font-sans bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${bgImage})` }}">
 
       {/* ── Header ── */}
       <header className="text-center mb-8 max-w-lg w-full">
