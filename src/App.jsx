@@ -4,8 +4,8 @@ import { createClient } from "@supabase/supabase-js";
 // ============================================================
 //  CONFIGURATION – Replace these four values before deploying
 // ============================================================
-const SUPABASE_URL      = "YOUR_SUPABASE_URL_HERE";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY_HERE";
+const SUPABASE_URL      = "https://qkmmgozeglmgprgdktfw.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_QIrEZBfFwajwUXlz0p-klw_YjdcT2AO";
 const FRONT_SHIRT_IMAGE_URL = "https://placehold.co/600x600/1e3a5f/ffffff?text=Shirt+Front";
 const BACK_SHIRT_IMAGE_URL  = "https://placehold.co/600x600/1e3a5f/ffffff?text=Shirt+Back";
 // ============================================================
