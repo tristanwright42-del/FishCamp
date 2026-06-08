@@ -77,13 +77,13 @@ export default function App() {
       {/* ── Header ── */}
       <header className="text-center mb-8 max-w-lg w-full">
         <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight leading-tight">
-          🐟 Fish Camp Alaska 🐟
+          🐟 Fish Camp 2026 🐟
         </h1>
         <p className="mt-2 text-lg text-slate-500 font-medium">
-          Soldotna · Shirt Size Tracker
+          
         </p>
         <p className="mt-1 text-sm text-slate-400">
-          Submit your name and size so we can order your shirt!
+          Submit your name and shirt size so we can design your shirt!
         </p>
       </header>
 
