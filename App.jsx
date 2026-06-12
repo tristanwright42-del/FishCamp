@@ -6,8 +6,8 @@ import { createClient } from "@supabase/supabase-js";
 // ============================================================
 const SUPABASE_URL      = "YOUR_SUPABASE_URL_HERE";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY_HERE";
-const FRONT_SHIRT_IMAGE_URL = "https://placehold.co/600x600/1e3a5f/ffffff?text=Shirt+Front";
-const BACK_SHIRT_IMAGE_URL  = "https://placehold.co/600x600/1e3a5f/ffffff?text=Shirt+Back";
+const FRONT_SHIRT_IMAGE_URL = "/shirt-front.png";
+const BACK_SHIRT_IMAGE_URL  = "/shirt-back.png";
 // ============================================================
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
