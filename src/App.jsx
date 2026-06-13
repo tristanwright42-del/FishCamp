@@ -4,8 +4,8 @@ import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = "https://qkmmgozeglmgprgdktfw.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_QIrEZBfFwajwUXlz0p-klw_YjdcT2AO";
-const FRONT_SHIRT_IMAGE_URL = "https://placehold.co/600x600/1e3a5f/ffffff?text=Shirt+Front";
-const BACK_SHIRT_IMAGE_URL = "https://placehold.co/600x600/1e3a5f/ffffff?text=Shirt+Back";
+const FRONT_SHIRT_IMAGE_URL = "/shirt-front.png.png";
+const BACK_SHIRT_IMAGE_URL = "/shirt-back.png.png";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const SHIRT_SIZES = ["S", "M", "L", "XL", "2XL", "3XL"];
